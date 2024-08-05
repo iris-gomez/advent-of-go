@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"regexp"
 	"strings"
 )
 
@@ -22,7 +21,7 @@ func main() {
 func part1(lines []string) int {
 	niceStrings := 0
 	for _, line := range lines {
-		if isNiceString1(line) {
+		if isNiceString(line) {
 			niceStrings += 1
 		}
 	}
@@ -33,7 +32,7 @@ func part1(lines []string) int {
 func part2(lines []string) int {
 	niceStrings := 0
 	for _, line := range lines {
-		if isNiceString2(line) {
+		if isNicerString(line) {
 			niceStrings += 1
 		}
 	}
@@ -41,36 +40,35 @@ func part2(lines []string) int {
 	return niceStrings
 }
 
-func isNiceString1(line string) bool {
-	hasNaughtyCombination, err := regexp.Match(`(ab|cd|pq|xy)`, []byte(line))
-	if err != nil {
-		log.Fatal(err)
+func isNiceString(line string) bool {
+	for _, mustNotContain := range []string{"ab", "cd", "pq", "xy"} {
+		if strings.Contains(line, mustNotContain) {
+			return false
+		}
 	}
 
-	if hasNaughtyCombination {
+	vowelCount := 0
+	for _, vowel := range "aeiou" {
+		vowelCount += strings.Count(line, string(vowel))
+	}
+	if vowelCount < 3 {
 		return false
 	}
 
-	var prevR rune
-	vowelCount := 0
-	hasLetterTwiceInARow := false
-	for _, r := range line {
-		switch r {
-		case 'a', 'e', 'i', 'o', 'u':
-			vowelCount += 1
+	repeats := 0
+	for i := 0; i < len(line)-1; i++ {
+		if line[i] == line[i+1] {
+			repeats++
 		}
-
-		if r == prevR {
-			hasLetterTwiceInARow = true
-		}
-
-		prevR = r
+	}
+	if repeats == 0 {
+		return false
 	}
 
-	return hasLetterTwiceInARow && vowelCount >= 3
+	return true
 }
 
-func isNiceString2(line string) bool {
+func isNicerString(line string) bool {
 	repeats := 0
 	for i := 1; i < len(line)-1; i++ {
 		if line[i-1] == line[i+1] {
