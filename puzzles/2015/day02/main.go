@@ -14,7 +14,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	lines := strings.Split(string(input), "\n")
+	lines := strings.Split(strings.TrimSpace(string(input)), "\n")
 
 	fmt.Printf("Part 1 solution: %d\n", part1(lines))
 	fmt.Printf("Part 2 solution: %d\n", part2(lines))
@@ -23,10 +23,6 @@ func main() {
 func part1(lines []string) int {
 	totalSquareFeet := 0
 	for _, line := range lines {
-		if line == "" {
-			break
-		}
-
 		dimensions := strings.Split(line, "x")
 
 		l, err := strconv.Atoi(dimensions[0])
@@ -56,10 +52,6 @@ func part1(lines []string) int {
 func part2(lines []string) int {
 	totalRibbonFeet := 0
 	for _, line := range lines {
-		if line == "" {
-			break
-		}
-
 		dimensions := strings.Split(line, "x")
 
 		l, err := strconv.Atoi(dimensions[0])
