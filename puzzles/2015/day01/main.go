@@ -4,41 +4,45 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 )
 
 func main() {
+	input := getInput()
+	fmt.Println("Part 1 solution:", part1(input))
+	fmt.Println("Part 2 solution:", part2(input))
+}
+
+func getInput() string {
 	input, err := os.ReadFile("input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Printf("Part 1 solution: %d\n", part1(input))
-	fmt.Printf("Part 2 solution: %d\n", part2(input))
+	return strings.TrimSpace(string(input))
 }
 
-func part1(input []byte) int {
+func part1(input string) int {
 	floor := 0
 	for _, char := range input {
 		switch char {
 		case '(':
-			floor += 1
+			floor++
 		case ')':
-			floor -= 1
+			floor--
 		}
 	}
 
 	return floor
 }
 
-func part2(input []byte) int {
-	position := 1
-	floor := 0
+func part2(input string) int {
+	floor, position := 0, 1
 	for i, char := range input {
 		switch char {
 		case '(':
-			floor += 1
+			floor++
 		case ')':
-			floor -= 1
+			floor--
 		}
 
 		if floor == -1 {

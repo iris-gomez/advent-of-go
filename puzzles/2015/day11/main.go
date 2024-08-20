@@ -8,32 +8,35 @@ import (
 )
 
 func main() {
+	input := getInput()
+	solution := part1(input)
+	fmt.Println("Part 1 solution:", solution)
+	fmt.Println("Part 2 solution:", part2(solution))
+}
+
+func getInput() string {
 	input, err := os.ReadFile("input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
-	password := strings.TrimSpace(string(input))
-
-	solution := part1(password)
-	fmt.Printf("Part 1 solution: %v\n", solution)
-	fmt.Printf("Part 2 solution: %v\n", part2(solution))
+	return strings.TrimSpace(string(input))
 }
 
-func part1(password string) string {
-	for isSecurePassword(password) == false {
-		password = incrementLetter(len(password)-1, password)
+func part1(input string) string {
+	for isSecurePassword(input) == false {
+		input = incrementLetter(len(input)-1, input)
 	}
 
-	return password
+	return input
 }
 
-func part2(password string) string {
-	password = incrementLetter(len(password)-1, password)
-	for isSecurePassword(password) == false {
-		password = incrementLetter(len(password)-1, password)
+func part2(input string) string {
+	input = incrementLetter(len(input)-1, input)
+	for isSecurePassword(input) == false {
+		input = incrementLetter(len(input)-1, input)
 	}
 
-	return password
+	return input
 }
 
 func incrementLetter(letter int, password string) string {

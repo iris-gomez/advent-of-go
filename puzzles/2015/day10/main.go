@@ -9,30 +9,33 @@ import (
 )
 
 func main() {
+	input := getInput()
+	fmt.Println("Part 1 solution:", part1(input))
+	fmt.Println("Part 2 solution:", part2(input))
+}
+
+func getInput() string {
 	input, err := os.ReadFile("input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
-	sequence := strings.TrimSpace(string(input))
-
-	fmt.Printf("Part 1 solution: %v\n", part1(sequence))
-	fmt.Printf("Part 2 solution: %v\n", part2(sequence))
+	return strings.TrimSpace(string(input))
 }
 
-func part1(sequence string) int {
+func part1(input string) int {
 	for i := 0; i < 40; i++ {
-		sequence = lookAndSay(sequence)
+		input = lookAndSay(input)
 	}
 
-	return len(sequence)
+	return len(input)
 }
 
-func part2(sequence string) int {
+func part2(input string) int {
 	for i := 0; i < 50; i++ {
-		sequence = lookAndSay(sequence)
+		input = lookAndSay(input)
 	}
 
-	return len(sequence)
+	return len(input)
 }
 
 func lookAndSay(sequence string) string {

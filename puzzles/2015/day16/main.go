@@ -9,14 +9,17 @@ import (
 )
 
 func main() {
+	lines := strings.Split(getInput(), "\n")
+	fmt.Println("Part 1 solution:", part1(lines))
+	fmt.Println("Part 2 solution:", part2(lines))
+}
+
+func getInput() string {
 	input, err := os.ReadFile("input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
-	lines := strings.Split(strings.TrimSpace(string(input)), "\n")
-
-	fmt.Printf("Part 1 solution: %d\n", part1(lines))
-	fmt.Printf("Part 2 solution: %d\n", part2(lines))
+	return strings.TrimSpace(string(input))
 }
 
 func part1(lines []string) int {
@@ -33,7 +36,7 @@ func part1(lines []string) int {
 		"cars":        2,
 		"perfumes":    1,
 	}
-	aunts := parseLines(lines)
+	aunts := getAunts(lines)
 	for i, aunt := range aunts {
 		if isGiftingAunt(tape, aunt) {
 			number = i + 1
@@ -56,16 +59,16 @@ func part2(lines []string) int {
 		"cars":        2,
 		"perfumes":    1,
 	}
-	aunts := parseLines(lines)
+	aunts := getAunts(lines)
 	for i, aunt := range aunts {
-		if isTrueGiftingAunt(tape, aunt) {
+		if isRealGiftingAunt(tape, aunt) {
 			number = i + 1
 		}
 	}
 	return number
 }
 
-func parseLines(lines []string) []map[string]int {
+func getAunts(lines []string) []map[string]int {
 	aunts := []map[string]int{}
 	for _, line := range lines {
 		split := strings.Split(strings.ReplaceAll(strings.ReplaceAll(line, ",", ""), ":", ""), " ")
@@ -85,39 +88,39 @@ func parseLines(lines []string) []map[string]int {
 	return aunts
 }
 
-func isGiftingAunt(m, sub map[string]int) bool {
-	if len(sub) > len(m) {
+func isGiftingAunt(tape, sub map[string]int) bool {
+	if len(sub) > len(tape) {
 		return false
 	}
 	for k, vsub := range sub {
-		if vm, found := m[k]; !found || vm != vsub {
+		if vm, found := tape[k]; !found || vm != vsub {
 			return false
 		}
 	}
 	return true
 }
 
-func isTrueGiftingAunt(m, sub map[string]int) bool {
-	if len(sub) > len(m) {
+func isRealGiftingAunt(tape, aunt map[string]int) bool {
+	if len(aunt) > len(tape) {
 		return false
 	}
-	for k, vsub := range sub {
-		vm, found := m[k]
+	for k, vaunt := range aunt {
+		vtape, found := tape[k]
 		if !found {
 			return false
 		}
 
 		switch k {
 		case "cats", "trees":
-			if vm >= vsub {
+			if vtape >= vaunt {
 				return false
 			}
 		case "pomeranians", "goldfish":
-			if vm <= vsub {
+			if vtape <= vaunt {
 				return false
 			}
 		default:
-			if vm != vsub {
+			if vtape != vaunt {
 				return false
 			}
 		}

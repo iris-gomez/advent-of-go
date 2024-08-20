@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 )
 
 type Santa struct {
@@ -11,7 +12,7 @@ type Santa struct {
 	Y int
 }
 
-func (s *Santa) Move(direction byte) {
+func (s *Santa) Move(direction rune) {
 	switch direction {
 	case '^':
 		s.Y += 1
@@ -25,16 +26,20 @@ func (s *Santa) Move(direction byte) {
 }
 
 func main() {
+	input := getInput()
+	fmt.Println("Part 1 solution:", part1(input))
+	fmt.Println("Part 2 solution:", part2(input))
+}
+
+func getInput() string {
 	input, err := os.ReadFile("input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	fmt.Printf("Part 1 solution: %d\n", part1(input))
-	fmt.Printf("Part 2 solution: %d\n", part2(input))
+	return strings.TrimSpace(string(input))
 }
 
-func part1(input []byte) int {
+func part1(input string) int {
 	santa := Santa{0, 0}
 
 	houses := make(map[string]int)
@@ -48,7 +53,7 @@ func part1(input []byte) int {
 	return len(houses)
 }
 
-func part2(input []byte) int {
+func part2(input string) int {
 	santa, robo := Santa{0, 0}, Santa{0, 0}
 
 	houses := make(map[string]int)

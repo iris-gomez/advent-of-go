@@ -10,64 +10,35 @@ import (
 )
 
 func main() {
+	lines := strings.Split(getInput(), "\n")
+	fmt.Println("Part 1 solution:", part1(lines))
+	fmt.Println("Part 2 solution:", part2(lines))
+}
+
+func getInput() string {
 	input, err := os.ReadFile("input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
-	lines := strings.Split(strings.TrimSpace(string(input)), "\n")
-
-	fmt.Printf("Part 1 solution: %d\n", part1(lines))
-	fmt.Printf("Part 2 solution: %d\n", part2(lines))
+	return strings.TrimSpace(string(input))
 }
 
 func part1(lines []string) int {
-	locations := make(map[string]int)
-	for _, line := range lines {
-		split := strings.Split(line, " ")
-
-		_, ok := locations[split[0]]
-		if !ok {
-			locations[split[0]] = len(locations)
-		}
-
-		_, ok = locations[split[2]]
-		if !ok {
-			locations[split[2]] = len(locations)
-		}
-	}
-
-	matrix := make([][]int, len(locations))
-	for i := range matrix {
-		matrix[i] = make([]int, len(locations))
-	}
-
-	for _, line := range lines {
-		split := strings.Split(line, " ")
-
-		weight, err := strconv.Atoi(split[4])
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		matrix[locations[split[0]]][locations[split[2]]] = weight
-		matrix[locations[split[2]]][locations[split[0]]] = weight
-	}
-
-	return shortestPath(matrix)
+	return shortestPath(makeMatrix(lines))
 }
 
 func part2(lines []string) int {
+	return longestPath(makeMatrix(lines))
+}
+
+func makeMatrix(lines []string) [][]int {
 	locations := make(map[string]int)
 	for _, line := range lines {
 		split := strings.Split(line, " ")
-
-		_, ok := locations[split[0]]
-		if !ok {
+		if _, ok := locations[split[0]]; !ok {
 			locations[split[0]] = len(locations)
 		}
-
-		_, ok = locations[split[2]]
-		if !ok {
+		if _, ok := locations[split[2]]; !ok {
 			locations[split[2]] = len(locations)
 		}
 	}
@@ -89,7 +60,7 @@ func part2(lines []string) int {
 		matrix[locations[split[2]]][locations[split[0]]] = weight
 	}
 
-	return longestPath(matrix)
+	return matrix
 }
 
 func shortestPath(matrix [][]int) int {
@@ -103,7 +74,7 @@ func shortestPath(matrix [][]int) int {
 			}
 		}
 
-		for _, permutation := range permutations(vertices) {
+		for _, permutation := range getPermutations(vertices) {
 			currentWeight := 0
 
 			j := source
@@ -130,7 +101,7 @@ func longestPath(matrix [][]int) int {
 			}
 		}
 
-		for _, permutation := range permutations(vertices) {
+		for _, permutation := range getPermutations(vertices) {
 			currentWeight := 0
 
 			j := source
@@ -146,7 +117,7 @@ func longestPath(matrix [][]int) int {
 	return maxWeight
 }
 
-func permutations(a []int) [][]int {
+func getPermutations(a []int) [][]int {
 	var heap func(int, []int)
 	result := [][]int{}
 

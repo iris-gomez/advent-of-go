@@ -12,42 +12,45 @@ import (
 )
 
 func main() {
+	input := getInput()
+	fmt.Println("Part 1 solution:", part1(input))
+	fmt.Println("Part 2 solution:", part2(input))
+}
+
+func getInput() string {
 	input, err := os.ReadFile("input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
-	secret := strings.TrimSpace(string(input))
-
-	fmt.Printf("Part 1 solution: %d\n", part1(secret))
-	fmt.Printf("Part 2 solution: %d\n", part2(secret))
+	return strings.TrimSpace(string(input))
 }
 
-func part1(secret string) int {
+func part1(input string) int {
 	number := 0
 	for {
 		h := md5.New()
-		io.WriteString(h, secret+strconv.Itoa(number))
+		io.WriteString(h, input+strconv.Itoa(number))
 		sum := hex.EncodeToString(h.Sum(nil)[:])
 		if strings.HasPrefix(sum, "00000") {
 			break
 		}
-
 		number++
 	}
+
 	return number
 }
 
-func part2(secret string) int {
+func part2(input string) int {
 	number := 0
 	for {
 		h := md5.New()
-		io.WriteString(h, secret+strconv.Itoa(number))
+		io.WriteString(h, input+strconv.Itoa(number))
 		sum := hex.EncodeToString(h.Sum(nil)[:])
 		if strings.HasPrefix(sum, "000000") {
 			break
 		}
-
 		number++
 	}
+
 	return number
 }

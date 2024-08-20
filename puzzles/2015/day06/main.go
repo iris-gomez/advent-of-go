@@ -13,20 +13,23 @@ type Coordinates struct {
 }
 
 func main() {
+	lines := strings.Split(getInput(), "\n")
+	fmt.Println("Part 1 solution:", part1(lines))
+	fmt.Println("Part 2 solution:", part2(lines))
+}
+
+func getInput() string {
 	input, err := os.ReadFile("input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
-	lines := strings.Split(strings.TrimSpace(string(input)), "\n")
-
-	fmt.Printf("Part 1 solution: %d\n", part1(lines))
-	fmt.Printf("Part 2 solution: %d\n", part2(lines))
+	return strings.TrimSpace(string(input))
 }
 
-func part1(instructions []string) int {
+func part1(lines []string) int {
 	grid := [1000][1000]bool{}
-	for _, instruction := range instructions {
-		directive, from, to := parseInstruction(instruction)
+	for _, line := range lines {
+		directive, from, to := parseLine(line)
 		for x := from.X; x <= to.X; x++ {
 			for y := from.Y; y <= to.Y; y++ {
 				switch directive {
@@ -53,10 +56,10 @@ func part1(instructions []string) int {
 	return onCounter
 }
 
-func part2(instructions []string) int {
+func part2(lines []string) int {
 	grid := [1000][1000]int{}
-	for _, instruction := range instructions {
-		directive, from, to := parseInstruction(instruction)
+	for _, line := range lines {
+		directive, from, to := parseLine(line)
 		for x := from.X; x <= to.X; x++ {
 			for y := from.Y; y <= to.Y; y++ {
 				switch directive {
@@ -65,10 +68,7 @@ func part2(instructions []string) int {
 				case "on":
 					grid[x][y]++
 				case "off":
-					grid[x][y]--
-					if grid[x][y] < 0 {
-						grid[x][y] = 0
-					}
+					grid[x][y] = max(0, grid[x][y]-1)
 				}
 			}
 		}
@@ -84,30 +84,30 @@ func part2(instructions []string) int {
 	return totalBrightness
 }
 
-func parseInstruction(instruction string) (string, Coordinates, Coordinates) {
+func parseLine(line string) (string, Coordinates, Coordinates) {
 	var directive string
 	var from, to Coordinates
 	var x, y int
 
-	parts := strings.Split(instruction, " ")
-	if parts[0] == "toggle" {
-		directive = parts[0]
-		x, y = splitCoordinates(parts[1])
+	split := strings.Split(line, " ")
+	if split[0] == "toggle" {
+		directive = split[0]
+		x, y = getCoordinates(split[1])
 		from = Coordinates{x, y}
-		x, y = splitCoordinates(parts[3])
+		x, y = getCoordinates(split[3])
 		to = Coordinates{x, y}
 	} else {
-		directive = parts[1]
-		x, y = splitCoordinates(parts[2])
+		directive = split[1]
+		x, y = getCoordinates(split[2])
 		from = Coordinates{x, y}
-		x, y = splitCoordinates(parts[4])
+		x, y = getCoordinates(split[4])
 		to = Coordinates{x, y}
 	}
 
 	return directive, from, to
 }
 
-func splitCoordinates(coordinates string) (int, int) {
+func getCoordinates(coordinates string) (int, int) {
 	xy := strings.Split(coordinates, ",")
 
 	x, err := strconv.Atoi(xy[0])

@@ -8,14 +8,17 @@ import (
 )
 
 func main() {
+	lines := strings.Split(getInput(), "\n")
+	fmt.Println("Part 1 solution:", part1(lines))
+	fmt.Println("Part 2 solution:", part2(lines))
+}
+
+func getInput() string {
 	input, err := os.ReadFile("input.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
-	lines := strings.Split(strings.TrimSpace(string(input)), "\n")
-
-	fmt.Printf("Part 1 solution: %d\n", part1(lines))
-	fmt.Printf("Part 2 solution: %d\n", part2(lines))
+	return strings.TrimSpace(string(input))
 }
 
 func part1(lines []string) int {
@@ -25,19 +28,17 @@ func part1(lines []string) int {
 			niceStrings += 1
 		}
 	}
-
 	return niceStrings
 }
 
 func part2(lines []string) int {
-	niceStrings := 0
+	nicerStrings := 0
 	for _, line := range lines {
 		if isNicerString(line) {
-			niceStrings += 1
+			nicerStrings += 1
 		}
 	}
-
-	return niceStrings
+	return nicerStrings
 }
 
 func isNiceString(line string) bool {
